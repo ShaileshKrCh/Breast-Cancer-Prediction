@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Cancer Diagnostics Console</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js CDN Core -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-900 min-h-screen text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Dashboard Top Navigation Bar -->
+        <header class="mb-8 border-b border-slate-800 pb-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="flex h-3 w-3 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-xs font-semibold text-slate-400 tracking-widest uppercase">ML Engine Node Active</span>
+                </div>
+                <h1 class="text-3xl font-black bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent mt-1">
+                    Oncology Analysis & Visualization Suite
+                </h1>
+            </div>
+            <div class="bg-slate-800/80 backdrop-blur-md border border-slate-700 px-4 py-2 rounded-xl text-xs font-medium text-slate-300">
+                Core Classifier Model: <span class="text-indigo-400 font-bold">Random Forest Pipeline</span>
+            </div>
+        </header>
+
+        <!-- Compliance Disclaimer Notice -->
+        <div class="bg-amber-950/40 border border-amber-800/60 p-4 mb-8 rounded-xl shadow-xs">
+            <div class="flex gap-3">
+                <span class="text-amber-500 font-bold text-lg">⚠️</span>
+                <div>
+                    <p class="text-xs text-amber-200 font-bold uppercase tracking-wider">Clinical Deployment Advisory Notice</p>
+                    <p class="text-xs text-amber-300/80 mt-0.5">This dashboard represents a synthetic prototyping application. It is not cleared for in-vitro diagnostic use or true hospital screening environments. All computed metrics must be confirmed via licensed pathology assays.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left Inputs Panel (Form) -->
+            <div class="lg:col-span-5 bg-slate-800/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                        <span>📋</span> Core Feature Vectors
+                    </h2>
+                    
+                    <form id="diagnosticForm" class="space-y-5">
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label for="mean_radius" class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mean Radius</label>
+                                    <span class="text-xs text-slate-500">Normal: ~11 - 18 mm</span>
+                                </div>
+                                <input type="number" step="any" required name="mean_radius" id="mean_radius" value="14.17"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition text-sm text-white">
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label for="mean_texture" class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mean Texture</label>
+                                    <span class="text-xs text-slate-500">Normal: ~15 - 25</span>
+                                </div>
+                                <input type="number" step="any" required name="mean_texture" id="mean_texture" value="20.38"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition text-sm text-white">
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label for="mean_perimeter" class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mean Perimeter</label>
+                                    <span class="text-xs text-slate-500">Normal: ~75 - 120 mm</span>
+                                </div>
+                                <input type="number" step="any" required name="mean_perimeter" id="mean_perimeter" value="92.63"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition text-sm text-white">
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label for="mean_area" class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mean Area</label>
+                                    <span class="text-xs text-slate-500">Normal: ~400 - 1000 mm²</span>
+                                </div>
+                                <input type="number" step="any" required name="mean_area" id="mean_area" value="622.3"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition text-sm text-white">
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label for="mean_smoothness" class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mean Smoothness</label>
+                                    <span class="text-xs text-slate-500">Normal: ~0.08 - 0.12</span>
+                                </div>
+                                <input type="number" step="any" required name="mean_smoothness" id="mean_smoothness" value="0.101"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition text-sm text-white">
+                            </div>
+                        </div>
+
+                        <button type="submit" 
+                            class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg shadow-indigo-600/20 transform transition duration-150 active:scale-[0.99] cursor-pointer mt-2">
+                            Compute Predictive Matrix
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Visual Graphics Engine Panel -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
+                
+                <!-- Prediction Core Status Strip -->
+                <div id="predictionHeaderCard" class="bg-slate-800/30 border border-slate-800 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 min-h-[90px]">
+                    <div id="headerPlaceholder">
+                        <p class="text-slate-400 text-sm">Fill in the patient's biological metrics on the left to generate predictions and interactive baseline comparison graphs.</p>
+                    </div>
+                    
+                    <div id="headerOutput" class="hidden w-full flex items-center justify-between">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest font-bold text-slate-400">Diagnostic Consensus</span>
+                            <div class="text-2xl font-black mt-0.5" id="textDiagnosis">Analyzing...</div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs uppercase tracking-widest font-bold text-slate-400">Pipeline Confidence</span>
+                            <div class="text-2xl font-mono font-bold text-indigo-400 mt-0.5" id="textConfidence">00.00%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Graphs Workspace Container -->
+                <div class="bg-slate-800/50 border border-slate-800 rounded-2xl p-6 flex-1 flex flex-col justify-center items-center relative min-h-[400px]">
+                    
+                    <!-- Static Loading Spin Overlay -->
+                    <div id="chartLoading" class="hidden text-center space-y-3 z-10">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500 mx-auto"></div>
+                        <p class="text-xs font-mono text-indigo-400 tracking-wider">Resolving tensors & chart matrices...</p>
+                    </div>
+
+                    <!-- Static Error Notification -->
+                    <div id="chartError" class="hidden bg-rose-950/50 border border-rose-800 p-4 rounded-xl max-w-md text-sm text-rose-200">
+                        <span class="font-bold block mb-1">❌ Computation Error Triggered</span>
+                        <p id="errorText" class="text-xs text-rose-300/80"></p>
+                    </div>
+
+                    <!-- Active Rendered Graphics Canvas Grid -->
+                    <div id="chartWorkspace" class="w-full h-full grid grid-cols-1 md:grid-cols-12 gap-4 items-center opacity-30 pointer-events-none transition-opacity duration-300">
+                        <!-- Left Sub-column: Radar Comparison Chart -->
+                        <div class="md:col-span-7 w-full flex justify-center">
+                            <div class="w-full max-w-[340px] aspect-square">
+                                <canvas id="radarChartCanvas"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Sub-column: Gauge Malignancy Probability Meter -->
+                        <div class="md:col-span-5 w-full flex flex-col justify-center items-center border-t md:border-t-0 md:border-l border-slate-800 pt-4 md:pt-0 md:pl-4">
+                            <span class="text-xs text-slate-400 uppercase tracking-wider font-bold mb-2">Probability Dial</span>
+                            <div class="w-full max-w-[200px] relative">
+                                <canvas id="gaugeChartCanvas"></canvas>
+                                <div class="absolute inset-0 flex flex-col items-center justify-end pb-3">
+                                    <span class="text-2xl font-black font-mono tracking-tight text-white" id="gaugeCenterLabel">0%</span>
+                                    <span class="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Malignant Risk</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interface Script Controller Execution Core -->
+    <script>
+        const form = document.getElementById('diagnosticForm');
+        const headerPlaceholder = document.getElementById('headerPlaceholder');
+        const headerOutput = document.getElementById('headerOutput');
+        const textDiagnosis = document.getElementById('textDiagnosis');
+        const textConfidence = document.getElementById('textConfidence');
+        
+        const chartWorkspace = document.getElementById('chartWorkspace');
+        const chartLoading = document.getElementById('chartLoading');
+        const chartError = document.getElementById('chartError');
+        const errorText = document.getElementById('errorText');
+        const gaugeLabel = document.getElementById('gaugeCenterLabel');
+
+        let radarChartInstance = null;
+        let gaugeChartInstance = null;
+
+        // Initialize empty baseline placeholder charts on interface mount
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeBlankCharts();
+        });
+
+        function initializeBlankCharts() {
+            const ctxRadar = document.getElementById('radarChartCanvas').getContext('2d');
+            const ctxGauge = document.getElementById('gaugeChartCanvas').getContext('2d');
+
+            // Set global chart configuration overrides for a clean dark mode look
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.font.family = 'ui-sans-serif, system-ui, sans-serif';
+
+            radarChartInstance = new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['Radius', 'Texture', 'Perimeter', 'Area', 'Smoothness'],
+                    datasets: [
+                        { label: 'Patient Vector', data: [0,0,0,0,0], borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', borderWidth: 2 },
+                        { label: 'Benign Target', data: [43,45,41,18,56], borderColor: '#10b981', backgroundColor: 'transparent', borderDash: [4,4], borderWidth: 1.5 },
+                        { label: 'Malignant Target', data: [62,54,61,39,62], borderColor: '#f43f5e', backgroundColor: 'transparent', borderDash: [4,4], borderWidth: 1.5 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        r: {
+                            angleLines: { color: '#334155' },
+                            grid: { color: '#1e293b' },
+                            pointLabels: { font: { size: 11, weight: 'bold' } },
+                            ticks: { display: false },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+
+            gaugeChartInstance = new Chart(ctxGauge, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [0, 100],
+                        backgroundColor: ['#334155', '#1e293b'],
+                        borderWidth: 0,
+                        circumference: 180,
+                        rotation: 270,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    cutout: '82%',
+                    plugins: { tooltip: { enabled: false }, legend: { display: false } }
+                }
+            });
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Set layout to loading state
+            chartError.classList.add('hidden');
+            chartWorkspace.classList.add('opacity-30');
+            chartWorkspace.classList.add('pointer-events-none');
+            chartLoading.classList.remove('hidden');
+
+            const payload = new FormData(form);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: payload
+                });
+                const result = await response.json();
+
+                chartLoading.classList.add('hidden');
+
+                if (!response.ok || !result.success) {
+                    displayFailureState(result.error || 'Server calculation failure.');
+                    return;
+                }
+
+                // Unhide and update results banner elements
+                headerPlaceholder.classList.add('hidden');
+                headerOutput.classList.remove('hidden');
+                textDiagnosis.innerText = result.prediction;
+                textConfidence.innerText = result.confidence;
+
+                // Color-code the typography output dynamically
+                if (result.raw_class === 0) {
+                    textDiagnosis.className = "text-2xl font-black mt-0.5 text-rose-500";
+                    document.getElementById('predictionHeaderCard').className = "bg-rose-950/20 border border-rose-900/60 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 min-h-[90px]";
+                } else {
+                    textDiagnosis.className = "text-2xl font-black mt-0.5 text-emerald-500";
+                    document.getElementById('predictionHeaderCard').className = "bg-emerald-950/20 border border-emerald-900/60 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 min-h-[90px]";
+                }
+
+                // Animate and map standard Radar data values
+                radarChartInstance.data.datasets[0].data = result.chart_data.patient;
+                radarChartInstance.data.datasets[1].data = result.chart_data.benign_baseline;
+                radarChartInstance.data.datasets[2].data = result.chart_data.malignant_baseline;
+                radarChartInstance.update();
+
+                // Build contextual properties mapping the probability meter gauge fill
+                const malignantProbability = result.probability_malignant;
+                gaugeLabel.innerText = `${malignantProbability.toFixed(0)}%`;
+                
+                const gaugeColor = malignantProbability > 50 ? '#f43f5e' : '#10b981';
+                gaugeChartInstance.data.datasets[0].backgroundColor = [gaugeColor, '#1e293b'];
+                gaugeChartInstance.data.datasets[0].data = [malignantProbability, 100 - malignantProbability];
+                gaugeChartInstance.update();
+
+                // Bring workspace into view
+                chartWorkspace.classList.remove('opacity-30');
+                chartWorkspace.classList.remove('pointer-events-none');
+
+            } catch (err) {
+                chartLoading.classList.add('hidden');
+                displayFailureState('Network protocol anomaly. Ensure your local Flask app is running.');
+            }
+        });
+
+        function displayFailureState(msg) {
+            errorText.innerText = msg;
+            chartError.classList.remove('hidden');
+            headerOutput.classList.add('hidden');
+            headerPlaceholder.classList.remove('hidden');
+            document.getElementById('predictionHeaderCard').className = "bg-slate-800/30 border border-slate-800 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 min-h-[90px]";
+        }
+    </script>
+</body>
+</html>
